@@ -1,9 +1,4 @@
-
-
 import streamlit as st 
-
-
-
 from dash_preprocessing import carregar_faturas, intervalos, indicadores, grafico_linhas, grafico_categorias, faturas
 
 df = carregar_faturas()

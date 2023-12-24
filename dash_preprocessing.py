@@ -17,25 +17,26 @@ def carregar_faturas():
                 df_temp = df_temp.drop(columns=['Unnamed: 0'])   
  
             df = pd.concat([df, df_temp], axis=0).drop_duplicates()
-        
-        # Renomeando as colunas 
-        df.columns = ['Data', 'Categoria', 'Loja', 'Valor (R$)']
-        # Remover o pagamento da fatura
-        df = df[df['Categoria'] != 'payment']
-        # Converter em datetime
-        df['Data'] = pd.to_datetime(df['Data'])
-
-        st.sidebar.header('Outras compras')
-        option = st.sidebar.selectbox('Você deseja adicionar outras compras?',('Sim', 'Não'))
-        if option == "Sim":
-            # Widget de upload de arquivo
-            outras_compras = st.sidebar.file_uploader("Escolha um arquivo EXCEL", type="xlsx", key = 'outras_compras')
-
-            df_outras = pd.read_excel(outras_compras)
+        if len(df) > 0:
+            # Renomeando as colunas 
+            df.columns = ['Data', 'Categoria', 'Loja', 'Valor (R$)']
+            # Remover o pagamento da fatura
+            df = df[df['Categoria'] != 'payment']
             # Converter em datetime
-            df_outras['Data'] = pd.to_datetime(df_outras['Data'])
+            df['Data'] = pd.to_datetime(df['Data'])
 
-            df = pd.concat([df, df_outras]).drop_duplicates()
+            st.sidebar.header('Outras compras')
+            option = st.sidebar.selectbox('Você deseja adicionar outras compras?',('Não', 'Sim'))
+            if option == "Sim":
+                # Widget de upload de arquivo
+                outras_compras = st.sidebar.file_uploader("Escolha um arquivo EXCEL", type="xlsx", key = 'outras_compras')
+
+                if outras_compras is not None:
+                    df_outras = pd.read_excel(outras_compras)
+                    # Converter em datetime
+                    df_outras['Data'] = pd.to_datetime(df_outras['Data'])
+
+                    df = pd.concat([df, df_outras]).drop_duplicates()
     return df
 
 
