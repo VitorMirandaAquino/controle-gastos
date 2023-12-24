@@ -79,13 +79,13 @@ def indicadores(df_30_dias, df_30d_60d):
     - df_30d_60d (DataFrame): DataFrame contendo informações de despesas entre 30 e 60 dias atrás.
     """
     # Calcular o gasto nos últimos 30 dias
-    gasto_30d = df_30_dias['Valor (R$)'].sum()
+    gasto_30d = df_30_dias['Valor (R$)'].sum().round(2)
     
     # Categoria de maior gasto nos últimos 30 dias
     categoria_gastona = df_30_dias.groupby('Categoria')['Valor (R$)'].sum().sort_values(ascending=False).index[0]
 
     # Calcular o gasto entre 30 e 60 dias atrás
-    gasto_30d_60d = df_30d_60d['Valor (R$)'].sum()
+    gasto_30d_60d = df_30d_60d['Valor (R$)'].sum().round(2)
 
     # Exibir os indicadores usando Streamlit
     st.header('Indicadores')
@@ -106,7 +106,7 @@ def grafico_linhas(df_365_dias):
 
     # Agrupar por data e calcular gastos acumulados
     df_dia = df_365_dias.groupby(['Data'])['Valor (R$)'].sum().reset_index()
-    df_dia['Valor (R$)'] = df_dia['Valor (R$)'].cumsum()
+    df_dia['Valor (R$)'] = df_dia['Valor (R$)'].cumsum().round(2)
 
     # Criar o gráfico de linhas
     fig = px.line(df_dia, y='Valor (R$)', x='Data', title="Gastos Acumulados nos últimos 365 dias")
