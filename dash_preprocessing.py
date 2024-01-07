@@ -174,12 +174,23 @@ def faturas(df):
     - None
     """
     st.header('Faturas')
-
+    
     # Ordenar o DataFrame por data de forma decrescente
     df = df.sort_values(by='Data', ascending=False).reset_index(drop=True)
 
     # Remover linhas duplicadas
     df = df.drop_duplicates()
 
+    # Cria uma lista com as categorias de despesas
+    categorias = df['Categoria'].unique().tolist()
+    
+    # Seleciona as categorias que deseja visualizar
+    categorias_selecionadas = st.multiselect("Quais categorias deseja visualizar?", options=['Todas']+ categorias, default=categorias) 
+
+    if "Todas" not in categorias_selecionadas:
+        # Filtra o dataframe que será exibido
+        df_filtrado = df[df['Categoria'].isin(categorias_selecionadas)]
+    else:
+        df_filtrado = df.copy()
     # Exibir o DataFrame usando Streamlit
-    st.dataframe(df)
+    st.dataframe(df_filtrado)
